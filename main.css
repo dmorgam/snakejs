@@ -1,0 +1,61 @@
+body{
+ background-color: #2F4F4F;
+ color: #ddd;
+}
+
+h2{
+ text-align: center;
+ color: #555;
+ background-color: #D8BFD8;
+ border-radius: 2em;
+ width: 6em;
+ margin: 0 auto;
+ padding: 0.2em;
+ margin-bottom: 0.2em;
+}
+
+.canvas-container{
+ width: 50%;
+ background-color: #778899;
+ background-image: url("assets/grass.png");
+ background-size: 20px;
+ margin: 0 auto;
+}
+
+canvas{
+ border: 2px solid #2F4F4F;
+}
+
+.button-pad{
+ width: 14em;
+ margin: 0.5em auto 0;
+}
+
+.btn{
+ width: 6em;
+ border: none;
+ background-color: #F08080;
+ padding: 0.5em;
+ border-radius: 1em;
+ font-size: 1.1em;
+}
+
+.speed{
+ width: 7em;
+ float: left;
+}
+
+.speed input{
+ padding: 0.5em;
+ border-radius: 0.5em;
+ border: 1px solid #2F4F4F;
+}
+
+.puntos-pad{
+ float: right;
+}
+
+.btn:hover{
+ background-color: #FFB6C1;
+}
+

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+   <head>
+      <title>Snake JS</title> 
+      <link rel="stylesheet" href="main.css">
+   </head>
+   
+   <body>
+   <div id="container">
+      <h2>SNAKE JS</h2>
+      <div class="canvas-container" style="display: none;">
+         <canvas id="myCanvas"></canvas>
+         <span class="puntos-pad">
+            <b>Puntos: </b><span id="puntos">0</span>
+         </span>
+         <div class="speed">
+            <label>Speed: </label>
+            <input type="number" id="speed-input" oninput="changeSpeed(this.value)" value="5" min="1" max="9">
+         </div>
+      </div>
+      <div class="button-pad">
+         <button class="btn" id="start-btn" type="button" onclick="startGame()">Start</button>
+         <button class="btn" id="pause-btn" type="button" onclick="stopGame()">Pause</button>
+      </div>
+
+      <!-- ASSETS -->
+      <div style="display:none;">
+         <img id="asset-apple" src="assets/apple.png" width="20" height="20">
+         <img id="snake-head" src="assets/snake-head.png" width="20" height="20">
+         <img id="snake-body" src="assets/snake-body.png" width="20" height="20">
+         <img id="snake-tail" src="assets/snake-tail.png" width="20" height="20">
+      </div>
+   
+      <script src="main.js"></script>
+   </div>
+   </body>
+</html>
