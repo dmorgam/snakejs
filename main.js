@@ -8,7 +8,7 @@ var size = [0,0]
 var speed = 500
 var x = 300
 var y = 250
-var blockSize = 50 
+var blockSize = 25 
 
 
 var move = {
@@ -50,8 +50,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
 
 // Retorna las dimensiones del tablero en base al width del viewport
 function getDimensions(){
-   return [Math.floor((window.innerWidth/blockSize))*blockSize,
-      Math.floor((window.innerHeight/blockSize)*0.9)*blockSize]
+   return [Math.floor((window.innerWidth/blockSize)-1)*blockSize,
+           Math.floor((window.innerHeight/blockSize)*0.9-1)*blockSize]
 }
 
 function drawRotate(ctx,image,xpos,ypos,degrees){
@@ -97,19 +97,43 @@ function drawSnake(x,y){
       
       // Cabeza
       if(i == 0){
-         var head = document.getElementById('snake-head')
+         let head = document.getElementById('snake-head')
          drawRotate(snake,head,snakeArray[i][0],snakeArray[i][1],getDegDirection(snakeArray[i][2]))
       //Cola
       }else if(i == snakeArray.length-1){
-         var tail = document.getElementById('snake-tail')
-         
+         let tail = document.getElementById('snake-tail')
+       
          drawRotate(snake,tail,snakeArray[i][0],snakeArray[i][1],getDegDirection(snakeArray[i-1][2],'tail'))
       
       // Cuerpo   
       }else{
-         var body = document.getElementById('snake-body')
-         
+         let turn = document.getElementById('snake-turn')
+        
+         if(snakeArray[i-1][0] == snakeArray[i+1][0] || snakeArray[i-1][1] == snakeArray[i+1][1]){
+            let body = document.getElementById('snake-body')
             snake.drawImage(body,snakeArray[i][0], snakeArray[i][1], blockSize, blockSize)   
+
+         // Bloque de giro de vertical a horizontal
+         }else if(snakeArray[i-1][0] != snakeArray[i][0]){
+            if(snakeArray[i-1][2] == 'left'){
+               if(snakeArray[i][2] == 'up'){ drawRotate(snake,turn,snakeArray[i][0],snakeArray[i][1],270) }
+               else{ drawRotate(snake,turn,snakeArray[i][0],snakeArray[i][1],0) }
+            }else{
+               if(snakeArray[i][2] == 'up'){ drawRotate(snake,turn,snakeArray[i][0],snakeArray[i][1],180) } 
+               else{ drawRotate(snake,turn,snakeArray[i][0],snakeArray[i][1],90) } 
+            }
+         
+         // Bloque de giro de horizontal a vertical
+         }else if(snakeArray[i-1][1] != snakeArray[i][1]){
+            if(snakeArray[i-1][2] == 'up'){
+               if(snakeArray[i][2] == 'left'){ drawRotate(snake,turn,snakeArray[i][0],snakeArray[i][1],90) }
+               else{ drawRotate(snake,turn,snakeArray[i][0],snakeArray[i][1],0) }
+            }else{
+               if(snakeArray[i][2] == 'right'){ drawRotate(snake,turn,snakeArray[i][0],snakeArray[i][1],270) } 
+               else{ drawRotate(snake,turn,snakeArray[i][0],snakeArray[i][1],180) } 
+            }
+         
+         }
       }
    }
 }
