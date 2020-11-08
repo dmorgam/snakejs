@@ -293,6 +293,8 @@ function resetGame(){
         document.getElementsByClassName('end-popup')[0].style.display = 'none' 
         ended = false
         move = { direction: 'left', lock: false }
+        snakeArray = [[x,y,move.direction]]
+        snakeSize = 2
 }
 
 function startGame(){
