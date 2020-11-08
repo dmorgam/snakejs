@@ -350,7 +350,7 @@ function handleTouchMove(evt) {
         if( xDiff > 0 ) {
       if(move.direction != 'right'){ move.direction = 'left' }
         }else{
-      if(move.direction != 'right'){ move.direction = 'left' }
+      if(move.direction != 'left'){ move.direction = 'right' }
         }                   
     }else{
         if( yDiff > 0 ){
