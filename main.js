@@ -146,20 +146,23 @@ function drawSnake(x,y){
 
 
 document.addEventListener('keydown', function (event) {
-   event.preventDefault()
    //Bloqueo de movimiento hasta siguiente step
    if(!move.lock){
       switch(event.key){
          case 'ArrowUp':
+            event.preventDefault()
             if(move.direction != 'down'){ move.direction = 'up' }
          break;
          case 'ArrowDown':
+            event.preventDefault()
             if(move.direction != 'up'){ move.direction = 'down' }
          break;
          case 'ArrowLeft':
+            event.preventDefault()
             if(move.direction != 'right'){ move.direction = 'left' }
          break;
          case 'ArrowRight':
+            event.preventDefault()
             if(move.direction != 'left'){ move.direction = 'right' }
          break;
       }
