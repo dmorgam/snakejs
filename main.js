@@ -8,7 +8,7 @@ var size = [0,0]
 var speed = 500
 var x = 300
 var y = 250
-var blockSize = 25 
+var blockSize = 25
 
 
 var move = {
@@ -26,9 +26,6 @@ var ended = false
 // Posicion de la comida x, y y estado comido o no
 var foodPos = [[0,0,true],[0,0,true]]
 
-//Cantidad de bloques de movimiento
-var xblocks = document.getElementById('myCanvas').width / blockSize
-var yblocks = document.getElementById('myCanvas').height / blockSize
 
 
 
@@ -196,16 +193,35 @@ function foodGenerator(){
    
    for(let i = 0; i < foodPos.length; i++){
       if(foodPos[i][2]){
-         let x = Math.floor(Math.random() * xblocks) * blockSize
-         let y = Math.floor(Math.random() * yblocks) * blockSize
+         let x = Math.floor(Math.random() * (size[0] / blockSize)) * blockSize
+         let y = Math.floor(Math.random() * (size[1] / blockSize)) * blockSize
          
          var food = canvas.getContext('2d')
          var apple = document.getElementById('asset-apple')
             food.drawImage(apple,x, y, blockSize, blockSize)
-         
+        
+          
          foodPos[i][0] = x
          foodPos[i][1] = y
          foodPos[i][2] = false
+         
+         
+         // Filtro para evitar que la comida se posicione encima del snake
+         for(index of snakeArray){
+            if(index[0] == x && index[1] == y){
+               foodPos[i][2] = true
+               foodGenerator()
+            }
+         }
+         
+         // Filtro para evitar que las comidas se sobrepongan a si mismas
+         for(let fo = 0; fo < foodPos.length; fo++){
+            if(fo != i && foodPos[fo][0] == foodPos[i][0] && foodPos[fo][1] == foodPos[i][1]){
+               foodPos[i][2] = true
+               foodGenerator() 
+            }
+         }        
+
       }
    }
 }
