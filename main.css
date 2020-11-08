@@ -18,7 +18,7 @@ h2{
  width: 50%;
  background-color: #778899;
  background-image: url("assets/grass.png");
- background-size: 20px;
+ background-size: 80px;
  margin: 0 auto;
 }
 
@@ -34,30 +34,55 @@ canvas{
 .btn{
  width: 30%;
  border: none;
- background-color: #F08080;
+ background-color: #4682B4;
+ color: #fff;
  padding: 0.5em;
  border-radius: 1em;
  font-size: 1em;
+ font-weight: bold;
+ box-shadow: 0px 0px 5px 0px rgba(0,0,0,0.75);
 }
 
+.btn.btn-start{
+ background-color: #A0522D;
+}
+
+.btn.btn-start:hover{
+ background-color: #F4A460;
+}
 .speed{
  width: 30%;
  float: left;
+ font-size: 1em; 
 }
 
 .speed input{
  padding: 0.5em;
  border-radius: 0.5em;
  border: 1px solid #2F4F4F;
- font-size: 1em;
 }
 
 .puntos-pad{
  float: right;
  width: 20%;
+ font-size: 1.2em;
 }
 
 .btn:hover{
- background-color: #FFB6C1;
+ background-color: #87CEEB;
 }
 
+.end-popup{
+ display: none;
+ position: fixed;
+ left: 40vw;
+ top: 40vh;
+ background-color: #A52A2A;
+ color: #fff; 
+ padding: 0.5em;
+ width: 20vw;
+ font-size: 2em;
+ text-align: center;
+ box-shadow: 5px 5px 5px 0px rgba(0,0,0,0.75);
+ font-weight: bold;
+}

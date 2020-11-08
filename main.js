@@ -8,7 +8,7 @@ var size = [0,0]
 var speed = 500
 var x = 0
 var y = 0
-var blockSize = 25
+var blockSize = 30
 document.getElementsByTagName("body")[0].style.fontSize = blockSize/2+'px'
 
 var move = {
@@ -256,21 +256,25 @@ function eatFood(){
    }
 }
 
+//Alerta de fin del juego
+function endPopup(){
+  audioEnd.play()
+  document.getElementsByClassName('end-popup')[0].style.display = 'block' 
+  document.getElementById('final-points').innerHTML = puntos
+}
 
 // Detector de colisiones
 function isCollision(){
    // Colision con los bordes
    if(x < 0 || y < 0 || x >= size[0] || y >= size[1]){
       ended = true
-      audioEnd.play()
-      alert('Fin de juego! '+puntos+' Puntos')
-   
+      endPopup()
    }else{
       // Colision con sigo mismo
       for(let i = 2; i < snakeArray.length; i++){
          if(snakeArray[i][0] == x && snakeArray[i][1] == y){
             ended = true
-            alert('Fin de juego! '+puntos+' Puntos')
+            endPopup()
          }
       }
    }

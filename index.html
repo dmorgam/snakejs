@@ -19,10 +19,15 @@
          </div>
       </div>
       <div class="button-pad">
-         <button class="btn" id="start-btn" type="button" onclick="startGame()">Jugar</button>
+         <button class="btn btn-start" id="start-btn" type="button" onclick="startGame()">Jugar</button>
          <button class="btn" id="pause-btn" type="button" onclick="stopGame()">Pausa</button>
       </div>
 
+      <!-- END GAME DIV -->
+      <div class="end-popup">
+         <p>¡Fin del juego!<br><span id="final-points"></span> Puntos
+      </div>
+      
       <!-- ASSETS -->
       <div style="display:none;">
          <img id="asset-apple" src="assets/apple.png" width="20" height="20">
