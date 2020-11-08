@@ -76,8 +76,8 @@ canvas{
 .end-popup{
  display: none;
  position: fixed;
- left: 40vw;
- top: 40vh;
+ left: 30vw;
+ top: 30vh;
  background-color: #A52A2A;
  color: #fff; 
  padding: 0.5em;
