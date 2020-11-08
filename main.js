@@ -4,11 +4,11 @@
 var size = [0,0]
 // Setup inicial
 
-
+var timer = ''
 var speed = 500
 var x = 0
 var y = 0
-var blockSize = 30
+var blockSize = 40
 document.getElementsByTagName("body")[0].style.fontSize = blockSize/2+'px'
 
 var move = {
@@ -41,8 +41,8 @@ document.addEventListener("DOMContentLoaded", function(event) {
    document.getElementsByClassName('canvas-container')[0].style.width = size[0]+'px'
    document.getElementsByClassName('canvas-container')[0].style.height = size[1]+'px'
    document.getElementsByClassName('canvas-container')[0].style.display = 'block'
-   document.getElementById('myCanvas').width = size[0]
-   document.getElementById('myCanvas').height = size[1] 
+   canvas.width = size[0]
+   canvas.height = size[1] 
 })
 
 // #################### FUNCTIONS SECTION #################################################
@@ -281,12 +281,26 @@ function isCollision(){
    
 }
 
+// Resetar el juego
+function resetGame(){
+        setCenter()
+        puntos = 0
+        document.getElementById('start-btn').innerHTML = 'Jugar'
+        started = false
+        clearInterval(timer)
+        foodPos = [[0,0,true],[0,0,true]]
+        canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
+        document.getElementsByClassName('end-popup')[0].style.display = 'none' 
+        ended = false
+        move = { direction: 'left', lock: false }
+}
+
 function startGame(){
    
    // Reset Game
    if(started){
-      location.reload()
-      
+      resetGame()
+
    // Iniciar Juego
    }else{
       document.getElementById('start-btn').innerHTML = 'Reiniciar'
@@ -296,7 +310,7 @@ function startGame(){
       pause = false  
 
       // Movimiento
-      let timer = setInterval(function(){
+      timer = setInterval(function(){
             
          if(!pause && !ended){
             let promise = new Promise( function(resolve){
