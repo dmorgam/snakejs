@@ -26,8 +26,9 @@ var ended = false
 // Posicion de la comida x, y y estado comido o no
 var foodPos = [[0,0,true],[0,0,true]]
 
-
-
+// Sonidos
+var audioEat = new Audio('sounds/eat.wav')
+var audioEnd = new Audio('sounds/end.ogg')
 
 var canvas = document.getElementById('myCanvas')
 
@@ -188,10 +189,10 @@ function moveSnake(){
 
 function stopGame(){
    if(pause){
-      document.getElementById('pause-btn').innerHTML = 'Pause'
+      document.getElementById('pause-btn').innerHTML = 'Pausa'
       pause = false
    }else{
-      document.getElementById('pause-btn').innerHTML = 'Continue'
+      document.getElementById('pause-btn').innerHTML = 'Continuar'
       pause = true
    }
 }
@@ -247,6 +248,7 @@ function eatFood(){
          let promise = new Promise( (resolve) =>{
             addPuntos()
             resolve(foodPos[i][2] = true)
+            audioEat.play()
          }).then( () => {
             foodGenerator()
          })
@@ -260,6 +262,7 @@ function isCollision(){
    // Colision con los bordes
    if(x < 0 || y < 0 || x >= size[0] || y >= size[1]){
       ended = true
+      audioEnd.play()
       alert('Fin de juego! '+puntos+' Puntos')
    
    }else{
@@ -282,7 +285,7 @@ function startGame(){
       
    // Iniciar Juego
    }else{
-      document.getElementById('start-btn').innerHTML = 'Reset'
+      document.getElementById('start-btn').innerHTML = 'Reiniciar'
       foodGenerator()
          
       started = true
@@ -303,7 +306,7 @@ function startGame(){
          
          // Fin del juego
          if(ended){
-            clearInterval(timer);
+            clearInterval(timer)
          }
       
       }, speed);
@@ -347,27 +350,30 @@ function handleTouchMove(evt) {
     if ( ! xDown || ! yDown ) {
         return;
     }
+   // Lock de movimiento 
+   if(!move.lock){
+            var xUp = evt.touches[0].clientX;                                    
+            var yUp = evt.touches[0].clientY;
 
-    var xUp = evt.touches[0].clientX;                                    
-    var yUp = evt.touches[0].clientY;
+            var xDiff = xDown - xUp;
+            var yDiff = yDown - yUp;
 
-    var xDiff = xDown - xUp;
-    var yDiff = yDown - yUp;
-
-    if( Math.abs( xDiff ) > Math.abs( yDiff ) ) {/*most significant*/
-        if( xDiff > 0 ) {
-      if(move.direction != 'right'){ move.direction = 'left' }
-        }else{
-      if(move.direction != 'left'){ move.direction = 'right' }
-        }                   
-    }else{
-        if( yDiff > 0 ){
-      if(move.direction != 'down'){ move.direction = 'up' }
-        }else{
-      if(move.direction != 'up'){ move.direction = 'down' }
-        }                                                                 
-    }
-    /* reset values */
-    xDown = null;
-    yDown = null;                                             
+            if( Math.abs( xDiff ) > Math.abs( yDiff ) ) {/*most significant*/
+                if( xDiff > 0 ) {
+              if(move.direction != 'right'){ move.direction = 'left' }
+                }else{
+              if(move.direction != 'left'){ move.direction = 'right' }
+                }                   
+            }else{
+                if( yDiff > 0 ){
+              if(move.direction != 'down'){ move.direction = 'up' }
+                }else{
+              if(move.direction != 'up'){ move.direction = 'down' }
+                }                                                                 
+            }
+            /* reset values */
+            xDown = null;
+            yDown = null;
+            move.lock = true
+   }                                           
 }
