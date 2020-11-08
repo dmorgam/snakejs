@@ -146,7 +146,7 @@ function drawSnake(x,y){
 
 
 document.addEventListener('keydown', function (event) {
-   
+   event.preventDefault()
    //Bloqueo de movimiento hasta siguiente step
    if(!move.lock){
       switch(event.key){

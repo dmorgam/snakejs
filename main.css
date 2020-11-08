@@ -24,6 +24,7 @@ h2{
 
 canvas{
  border: 2px solid #2F4F4F;
+ touch-action: none;
 }
 
 .button-pad{
