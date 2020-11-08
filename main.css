@@ -27,21 +27,21 @@ canvas{
 }
 
 .button-pad{
- width: 14em;
+ width: 50%;
  margin: 0.5em auto 0;
 }
 
 .btn{
- width: 6em;
+ width: 30%;
  border: none;
  background-color: #F08080;
  padding: 0.5em;
  border-radius: 1em;
- font-size: 1.1em;
+ font-size: 1em;
 }
 
 .speed{
- width: 7em;
+ width: 30%;
  float: left;
 }
 
@@ -49,10 +49,12 @@ canvas{
  padding: 0.5em;
  border-radius: 0.5em;
  border: 1px solid #2F4F4F;
+ font-size: 1em;
 }
 
 .puntos-pad{
  float: right;
+ width: 20%;
 }
 
 .btn:hover{

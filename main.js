@@ -6,10 +6,10 @@ var size = [0,0]
 
 
 var speed = 500
-var x = 300
-var y = 250
+var x = 0
+var y = 0
 var blockSize = 25
-
+document.getElementsByTagName("body")[0].style.fontSize = blockSize/2+'px'
 
 var move = {
    direction: 'left',
@@ -36,6 +36,7 @@ var canvas = document.getElementById('myCanvas')
 document.addEventListener("DOMContentLoaded", function(event) {
    //Setup dimensions (calculo automatico de las dimensiones) 
    size = getDimensions()
+   setCenter()
    document.getElementsByClassName('canvas-container')[0].style.width = size[0]+'px'
    document.getElementsByClassName('canvas-container')[0].style.height = size[1]+'px'
    document.getElementsByClassName('canvas-container')[0].style.display = 'block'
@@ -49,6 +50,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
 function getDimensions(){
    return [Math.floor((window.innerWidth/blockSize)-1)*blockSize,
            Math.floor((window.innerHeight/blockSize)*0.9-1)*blockSize]
+}
+
+//retorna el centro
+function setCenter(){
+   x = Math.floor((size[0]/blockSize)/2)*blockSize
+   y = Math.floor((size[1]/blockSize)/2)*blockSize
+   snakeArray = [[x,y,move.direction]]
 }
 
 function drawRotate(ctx,image,xpos,ypos,degrees){
