@@ -31,11 +31,24 @@ const audioEnd = new Audio('sounds/end.ogg')
 
 const canvas = document.getElementById('myCanvas')
 
+// Cache de assets (evita getElementById por frame)
+let assets = {}
+function cacheAssets () {
+  assets = {
+    head: document.getElementById('snake-head'),
+    body: document.getElementById('snake-body'),
+    tail: document.getElementById('snake-tail'),
+    turn: document.getElementById('snake-turn'),
+    apple: document.getElementById('asset-apple')
+  }
+}
+
 // #################### DOM LOADED SECTION ################################################
 document.addEventListener('DOMContentLoaded', function (event) {
   // Setup dimensions (calculo automatico de las dimensiones)
   size = getDimensions()
   setCenter()
+  cacheAssets()
   document.getElementsByClassName('canvas-container')[0].style.width = size[0] + 'px'
   document.getElementsByClassName('canvas-container')[0].style.height = size[1] + 'px'
   document.getElementsByClassName('canvas-container')[0].style.display = 'block'
@@ -98,20 +111,17 @@ function drawSnake (x, y) {
   for (let i = 0; i < snakeArray.length; i++) {
     // Cabeza
     if (i === 0) {
-      const head = document.getElementById('snake-head')
-      drawRotate(snake, head, snakeArray[i][0], snakeArray[i][1], getDegDirection(snakeArray[i][2]))
+      drawRotate(snake, assets.head, snakeArray[i][0], snakeArray[i][1], getDegDirection(snakeArray[i][2]))
       // Cola
     } else if (i === snakeArray.length - 1) {
-      const tail = document.getElementById('snake-tail')
-      drawRotate(snake, tail, snakeArray[i][0], snakeArray[i][1], getDegDirection(snakeArray[i - 1][2], 'tail'))
+      drawRotate(snake, assets.tail, snakeArray[i][0], snakeArray[i][1], getDegDirection(snakeArray[i - 1][2], 'tail'))
 
       // Cuerpo
     } else {
-      const turn = document.getElementById('snake-turn')
+      const turn = assets.turn
 
       if (snakeArray[i - 1][0] === snakeArray[i + 1][0] || snakeArray[i - 1][1] === snakeArray[i + 1][1]) {
-        const body = document.getElementById('snake-body')
-        snake.drawImage(body, snakeArray[i][0], snakeArray[i][1], blockSize, blockSize)
+        snake.drawImage(assets.body, snakeArray[i][0], snakeArray[i][1], blockSize, blockSize)
 
         // Bloque de giro de vertical a horizontal
       } else if (snakeArray[i - 1][0] !== snakeArray[i][0]) {
@@ -150,28 +160,27 @@ function drawSnake (x, y) {
 }
 
 document.addEventListener('keydown', function (event) {
-  // Bloqueo de movimiento hasta siguiente step
-  if (!move.lock) {
-    switch (event.key) {
-      case 'ArrowUp':
-        event.preventDefault()
-        if (move.direction !== 'down') { move.direction = 'up' }
-        break
-      case 'ArrowDown':
-        event.preventDefault()
-        if (move.direction !== 'up') { move.direction = 'down' }
-        break
-      case 'ArrowLeft':
-        event.preventDefault()
-        if (move.direction !== 'right') { move.direction = 'left' }
-        break
-      case 'ArrowRight':
-        event.preventDefault()
-        if (move.direction !== 'left') { move.direction = 'right' }
-        break
-    }
-    move.lock = true
+  if (move.lock) return
+  let changed = false
+  switch (event.key) {
+    case 'ArrowUp':
+      event.preventDefault()
+      if (move.direction !== 'down') { move.direction = 'up'; changed = true }
+      break
+    case 'ArrowDown':
+      event.preventDefault()
+      if (move.direction !== 'up') { move.direction = 'down'; changed = true }
+      break
+    case 'ArrowLeft':
+      event.preventDefault()
+      if (move.direction !== 'right') { move.direction = 'left'; changed = true }
+      break
+    case 'ArrowRight':
+      event.preventDefault()
+      if (move.direction !== 'left') { move.direction = 'right'; changed = true }
+      break
   }
+  if (changed) move.lock = true
 })
 
 function moveSnake () {
@@ -203,36 +212,30 @@ function stopGame () {
   }
 }
 
-function foodGenerator () {
+function isOccupied (x, y, skipFoodIdx) {
+  for (const block of snakeArray) {
+    if (block[0] === x && block[1] === y) return true
+  }
   for (let i = 0; i < foodPos.length; i++) {
-    if (foodPos[i][2]) {
-      const x = Math.floor(Math.random() * (size[0] / blockSize)) * blockSize
-      const y = Math.floor(Math.random() * (size[1] / blockSize)) * blockSize
+    if (i === skipFoodIdx) continue
+    if (!foodPos[i][2] && foodPos[i][0] === x && foodPos[i][1] === y) return true
+  }
+  return false
+}
 
-      const food = canvas.getContext('2d')
-      const apple = document.getElementById('asset-apple')
-      food.drawImage(apple, x, y, blockSize, blockSize)
-
-      foodPos[i][0] = x
-      foodPos[i][1] = y
-      foodPos[i][2] = false
-
-      // Filtro para evitar que la comida se posicione encima del snake
-      for (const index of snakeArray) {
-        if (index[0] === x && index[1] === y) {
-          foodPos[i][2] = true
-          foodGenerator()
-        }
-      }
-
-      // Filtro para evitar que las comidas se sobrepongan a si mismas
-      for (let fo = 0; fo < foodPos.length; fo++) {
-        if (fo !== i && foodPos[fo][0] === foodPos[i][0] && foodPos[fo][1] === foodPos[i][1]) {
-          foodPos[i][2] = true
-          foodGenerator()
-        }
-      }
-    }
+function foodGenerator () {
+  const ctx = canvas.getContext('2d')
+  for (let i = 0; i < foodPos.length; i++) {
+    if (!foodPos[i][2]) continue
+    let x, y
+    do {
+      x = Math.floor(Math.random() * (size[0] / blockSize)) * blockSize
+      y = Math.floor(Math.random() * (size[1] / blockSize)) * blockSize
+    } while (isOccupied(x, y, i))
+    ctx.drawImage(assets.apple, x, y, blockSize, blockSize)
+    foodPos[i][0] = x
+    foodPos[i][1] = y
+    foodPos[i][2] = false
   }
 }
 
@@ -246,13 +249,10 @@ function eatFood () {
   for (let i = 0; i < foodPos.length; i++) {
     if (foodPos[i][0] === snakeArray[0][0] && foodPos[i][1] === snakeArray[0][1]) {
       snakeSize++
-      const promise = new Promise((resolve) => {
-        addPuntos()
-        resolve(foodPos[i][2] = true)
-        audioEat.play()
-      }).then(() => {
-        foodGenerator()
-      })
+      addPuntos()
+      foodPos[i][2] = true
+      audioEat.play()
+      foodGenerator()
     }
   }
 }
@@ -285,8 +285,11 @@ function isCollision () {
 function resetGame () {
   setCenter()
   puntos = 0
+  document.getElementById('puntos').innerHTML = puntos
   document.getElementById('start-btn').innerHTML = 'Jugar'
+  document.getElementById('pause-btn').innerHTML = 'Pausa'
   started = false
+  pause = true
   clearInterval(timer)
   foodPos = [[0, 0, true], [0, 0, true]]
   canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
@@ -295,6 +298,15 @@ function resetGame () {
   move = { direction: 'left', lock: false }
   snakeArray = [[x, y, move.direction]]
   snakeSize = 2
+}
+
+function tick () {
+  if (!pause && !ended) {
+    eatFood()
+    moveSnake()
+    isCollision()
+  }
+  if (ended) clearInterval(timer)
 }
 
 function startGame () {
@@ -310,22 +322,7 @@ function startGame () {
     pause = false
 
     // Movimiento
-    timer = setInterval(function () {
-      if (!pause && !ended) {
-        const promise = new Promise(function (resolve) {
-          resolve(eatFood())
-        }).then(() => {
-          moveSnake()
-        }).then(() => {
-          isCollision()
-        })
-      }
-
-      // Fin del juego
-      if (ended) {
-        clearInterval(timer)
-      }
-    }, speed)
+    timer = setInterval(tick, speed)
   }
 }
 
@@ -340,6 +337,11 @@ function changeSpeed (vel) {
     document.getElementById('speed-input').value = vel
   }
   speed = (10 - parseInt(vel)) * 100
+  // Reiniciar interval con nueva velocidad si juego en curso
+  if (started && !ended) {
+    clearInterval(timer)
+    timer = setInterval(tick, speed)
+  }
 }
 
 // ############  CONTROL TOUCH #################################################
