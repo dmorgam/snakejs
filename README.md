@@ -1,96 +1,96 @@
 # Snake JS
 
-Implementación clásica del juego de la serpiente usando HTML5 Canvas y JavaScript puro, sin dependencias ni frameworks.
+Classic snake game built with HTML5 Canvas and vanilla JavaScript — no dependencies, no frameworks.
 
 ![JavaScript](https://img.shields.io/badge/JavaScript-vanilla-yellow)
 ![HTML5](https://img.shields.io/badge/HTML5-Canvas-orange)
 
 ---
 
-## Características
+## Features
 
-- Renderizado en `<canvas>` con sprites para cabeza, cuerpo, cola y bloques de giro.
-- Tablero adaptativo al tamaño del viewport (se calcula al cargar la página).
-- Dos manzanas simultáneas en pantalla.
-- Sistema de puntuación dinámico: a mayor velocidad, más puntos por manzana.
-- Detección de colisiones con bordes y con el propio cuerpo.
-- Sonidos al comer y al perder.
-- Controles de teclado y soporte de gestos táctiles (swipe).
-- Pausa, reinicio y selector de velocidad (1–9) en tiempo real.
+- `<canvas>` rendering with sprites for head, body, tail and turn blocks.
+- Board adapts to viewport size (computed on page load).
+- Two apples on screen at the same time.
+- Dynamic scoring: higher speed yields more points per apple.
+- Wall and self-collision detection.
+- Sound effects when eating and on game over.
+- Keyboard controls and touch gesture support (swipe).
+- Pause, restart and live speed selector (1–9).
 
-## Cómo jugar
+## How to play
 
-Basta con abrir `index.html` en un navegador moderno. No hay que compilar ni instalar nada.
+Just open `index.html` in a modern browser. No build or install required.
 
 ```bash
 git clone <repo>
 cd snakejs
 xdg-open index.html   # Linux
-# o simplemente doble click sobre index.html
+# or simply double-click index.html
 ```
 
-> Algunos navegadores bloquean el autoplay de audio hasta que el usuario interactúa con la página. El primer click en *Jugar* habilita el sonido.
+> Some browsers block audio autoplay until the user interacts with the page. The first click on *Play* enables sound.
 
-### Controles
+### Controls
 
-| Acción           | Teclado            | Móvil               |
-|------------------|--------------------|---------------------|
-| Mover arriba     | `↑`                | swipe arriba        |
-| Mover abajo      | `↓`                | swipe abajo         |
-| Mover izquierda  | `←`                | swipe izquierda     |
-| Mover derecha    | `→`                | swipe derecha       |
-| Pausa / reanudar | botón *Pausa*      | botón *Pausa*       |
-| Iniciar / reiniciar | botón *Jugar*   | botón *Jugar*       |
+| Action              | Keyboard         | Mobile          |
+|---------------------|------------------|-----------------|
+| Move up             | `↑`              | swipe up        |
+| Move down           | `↓`              | swipe down      |
+| Move left           | `←`              | swipe left      |
+| Move right          | `→`              | swipe right     |
+| Pause / resume      | *Pause* button   | *Pause* button  |
+| Start / restart     | *Play* button    | *Play* button   |
 
-### Velocidad
+### Speed
 
-El campo *Velocidad* acepta valores del 1 al 9:
+The *Speed* field accepts values from 1 to 9:
 
-- `1` = más lento (1000 ms por tick → 1 punto por manzana)
-- `9` = más rápido (100 ms por tick → 9 puntos por manzana)
+- `1` = slowest (1000 ms per tick → 1 point per apple)
+- `9` = fastest (100 ms per tick → 9 points per apple)
 
-El cambio se aplica de inmediato durante la partida.
+Changes apply immediately during a running game.
 
-## Estructura del proyecto
+## Project structure
 
 ```
 snakejs/
-├── index.html        # Estructura del DOM y referencias a sprites
-├── main.css          # Estilos del tablero, botones y popup
-├── main.js           # Lógica del juego (loop, render, input)
-├── package.json      # Dependencias de desarrollo (eslint)
-├── .eslintrc.json    # Config de ESLint (standard)
-├── assets/           # Sprites del snake, manzana, fondo
+├── index.html        # DOM structure and sprite references
+├── main.css          # Board, buttons and popup styles
+├── main.js           # Game logic (loop, render, input)
+├── package.json      # Dev dependencies (eslint)
+├── .eslintrc.json    # ESLint config (standard)
+├── assets/           # Snake, apple and background sprites
 │   ├── apple.png
 │   ├── grass.png
 │   ├── snake-head.png
 │   ├── snake-body.png
 │   ├── snake-tail.png
 │   └── snake-turn.png
-└── sounds/           # Efectos de sonido
+└── sounds/           # Sound effects
     ├── eat.wav
     └── end.ogg
 ```
 
-## Detalles de implementación
+## Implementation details
 
-- **Tamaño de bloque:** `40 px`. Todas las posiciones del snake y la comida se alinean a una rejilla de ese paso.
-- **Dimensiones del tablero:** se calculan en `getDimensions()` a partir de `window.innerWidth` y `0.9 * window.innerHeight`, redondeadas al múltiplo de 40 más cercano.
-- **Loop principal:** `setInterval` con periodo igual a `speed` ms. Cada tick comprueba comida, mueve la serpiente y verifica colisiones.
-- **Render del snake:** se limpian los bloques actuales con `clearRect`, se hace `unshift` de la nueva cabeza y `pop` de la cola si no hay crecimiento. Cada bloque se dibuja con la sprite correspondiente (cabeza, cuerpo, cola o giro) y la rotación adecuada.
-- **Bloqueo de input:** una bandera `move.lock` evita que el jugador cambie dos veces de dirección dentro del mismo tick (impide darse la vuelta y suicidarse en un solo frame).
+- **Block size:** `40 px`. All snake and food positions align to a grid of that step.
+- **Board dimensions:** computed in `getDimensions()` from `window.innerWidth` and `0.9 * window.innerHeight`, rounded to the nearest multiple of 40.
+- **Main loop:** `setInterval` with period equal to `speed` ms. Each tick checks food, moves the snake and tests collisions.
+- **Snake render:** current blocks are cleared with `clearRect`, then the new head is `unshift`ed and the tail `pop`ped if no growth. Each block is drawn with its matching sprite (head, body, tail or turn) and proper rotation.
+- **Input lock:** a `move.lock` flag prevents the player from changing direction twice within the same tick (avoids self-reversal in a single frame).
 
-## Desarrollo
+## Development
 
-El proyecto utiliza ESLint con la config `standard`.
+Project uses ESLint with the `standard` config.
 
 ```bash
 npm install
 npx eslint main.js
 ```
 
-## Limitaciones conocidas
+## Known limitations
 
-- En algunos navegadores el autoplay de audio queda silenciado hasta la primera interacción del usuario.
-- El tablero no se redimensiona dinámicamente al cambiar el tamaño de la ventana; hay que recargar la página.
-- En pantallas táctiles el `touchmove` puede solaparse con el scroll de la página si el gesto se inicia fuera del canvas.
+- On some browsers audio autoplay stays muted until the first user interaction.
+- Board does not resize dynamically when the window changes size; reload the page.
+- On touch screens `touchmove` can overlap with page scroll if the gesture starts outside the canvas.
